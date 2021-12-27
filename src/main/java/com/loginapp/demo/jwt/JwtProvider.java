@@ -25,11 +25,12 @@ public class JwtProvider {
         return response;
     }
 
-    public static String generateJWT(String username, String secret, long expirationTime) {
+    public static String generateJWT(String username, String role, String secret, long expirationTime) {
         Logger.getAnonymousLogger().info(username);
         String jwt = Jwts.builder().setSubject(username)
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(SignatureAlgorithm.HS512, Base64.getEncoder().encodeToString(secret.getBytes()))
+                .claim("role", role)
                 .compact();
         return jwt;
     }

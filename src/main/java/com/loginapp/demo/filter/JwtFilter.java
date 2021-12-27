@@ -1,10 +1,13 @@
 package com.loginapp.demo.filter;
 
+import com.loginapp.demo.constants.Roles;
 import com.loginapp.demo.jwt.JwtProvider;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -14,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -52,9 +56,12 @@ public class JwtFilter extends OncePerRequestFilter {
     private void authUser(String jwt) {
         Jws<Claims> parsedJwt = jwtProvider.parseJwt(jwt, secret);
         String username = (String) parsedJwt.getBody().get("sub");
+        String role = (String) parsedJwt.getBody().get("role");
+        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        authorities.add(new SimpleGrantedAuthority((role.isEmpty() || (role == null)) ? Roles.NORMAL_USER : role));
         Logger.getAnonymousLogger().info(username);
         SecurityContextHolder.getContext()
-                .setAuthentication(new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>()));
+                .setAuthentication(new UsernamePasswordAuthenticationToken(username, null, authorities));
         logger.info(SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
         logger.info(SecurityContextHolder.getContext().getAuthentication());
     }

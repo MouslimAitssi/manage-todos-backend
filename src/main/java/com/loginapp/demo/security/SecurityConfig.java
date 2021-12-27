@@ -1,6 +1,7 @@
 package com.loginapp.demo.security;
 
 
+import com.loginapp.demo.constants.Roles;
 import com.loginapp.demo.filter.JwtFilter;
 import com.loginapp.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers(HttpMethod.POST,"/login", "/users/create").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/users/get").hasAnyAuthority("ADMIN");
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilterBefore(this.jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }

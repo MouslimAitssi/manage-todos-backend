@@ -3,6 +3,7 @@ package com.loginapp.demo.service;
 import com.loginapp.demo.dao.UserDao;
 import com.loginapp.demo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,7 +23,7 @@ public class UserService implements UserDetailsService {
         if(user == null) {
             throw new UsernameNotFoundException("L'utilisateur avec le nom " + username + " est introuvable!");
         }
-        ArrayList authorities = new ArrayList<>();
+        ArrayList<GrantedAuthority> authorities =  new ArrayList<GrantedAuthority>();
         String role = user.getRole();
         Logger.getAnonymousLogger().info(role);
         authorities.add(new SimpleGrantedAuthority(role));
