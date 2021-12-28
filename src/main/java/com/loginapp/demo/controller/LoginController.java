@@ -8,19 +8,16 @@ import com.loginapp.demo.request.LoginRequest;
 import com.loginapp.demo.response.LoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.logging.Logger;
 
 
-@Controller
+@RestController
 public class LoginController {
 
     @Value("${secret}")
@@ -33,23 +30,19 @@ public class LoginController {
     private JwtProvider jwtProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest) throws Exception {
+    public LoginResponse login(@RequestBody LoginRequest loginRequest) throws Exception {
         User user = userDao.findByUsername(loginRequest.getUsername());
         Logger.getAnonymousLogger().info(loginRequest.getUsername());
         Logger.getAnonymousLogger().info(loginRequest.getPassword());
         try {
-            Authentication authenticate = authenticationManager
+            authenticationManager
                     .authenticate(
                             new UsernamePasswordAuthenticationToken(
                                     loginRequest.getUsername(), loginRequest.getPassword()
                             )
                     );
+            return new LoginResponse(jwtProvider.generateJWT(user.getUsername(), ((user != null) && (user.getRole() != null)) ? user.getRole() : Roles.NORMAL_USER, secret, 90000000));
 
-            //User user = (User) authenticate.getPrincipal();
-            return new ResponseEntity(
-                    new LoginResponse(jwtProvider.generateJWT(user.getUsername(), ((user != null) && (user.getRole() != null)) ? user.getRole() : Roles.NORMAL_USER, secret, 90000000)),
-                    HttpStatus.CREATED
-            );
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

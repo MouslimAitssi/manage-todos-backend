@@ -52,7 +52,8 @@ public class UserController {
     public User addTask(@RequestBody AddTaskRequest addTaskRequest) {
         User result = userDao.findById(addTaskRequest.getUserId());
         List<Task> tasks = result.getTasks();
-        tasks.add(addTaskRequest.getTask());
+        Task task = taskDao.save(new Task(addTaskRequest.getTask()));
+        tasks.add(task);
         result.setTasks(tasks);
         userDao.save(result);
         return result;

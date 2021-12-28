@@ -1,10 +1,8 @@
 package com.loginapp.demo.request;
 
-import com.loginapp.demo.model.Task;
-
 public class AddTaskRequest {
     private long userId;
-    private Task task;
+    private String task;
 
     public long getUserId() {
         return userId;
@@ -14,11 +12,11 @@ public class AddTaskRequest {
         this.userId = userId;
     }
 
-    public Task getTask() {
+    public String getTask() {
         return task;
     }
 
-    public void setTask(Task task) {
+    public void setTask(String task) {
         this.task = task;
     }
 }

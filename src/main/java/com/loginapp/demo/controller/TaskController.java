@@ -21,7 +21,7 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public Task gettaskById(@PathVariable long id) {
+    public Task getTaskById(@PathVariable long id) {
         Task task = taskDao.findById(id);
         return task;
     }
