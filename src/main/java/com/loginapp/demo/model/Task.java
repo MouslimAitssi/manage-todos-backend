@@ -10,9 +10,19 @@ public class Task {
     @Column(updatable = false, nullable = false)
     private long id;
     private String task;
+    private boolean done;
+
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
+    }
 
     public Task(String task) {
         this.task = task;
+        this.done = false;
     }
 
     public Task() {}

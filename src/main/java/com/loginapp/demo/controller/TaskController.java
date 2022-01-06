@@ -1,6 +1,5 @@
 package com.loginapp.demo.controller;
 
-
 import com.loginapp.demo.dao.TaskDao;
 import com.loginapp.demo.model.Task;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +25,21 @@ public class TaskController {
         return task;
     }
 
+    @GetMapping("/get")
+    public List<Task> getAllTasks() {
+         List<Task> tasks = taskDao.findAll();
+        return tasks;
+    }
+
     @PutMapping("/update")
     public Task updateTask(@RequestBody Task task) {
-        //task result = TaskDao.findBytaskname(task.gettaskname());
         taskDao.save(task);
         return task;
     }
 
+    @DeleteMapping("/delete/{id}")
+    public void deleteTask(@PathVariable long id) {
+        taskDao.deleteById(id);
+    }
 
 }
